@@ -8,11 +8,11 @@
     <style>
         body {
             font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #1e1e2f, #3a3a5a);
             color: white;
             text-align: center;
             margin: 0;
             padding: 0;
-            background-color: black;
         }
 
         .container {
@@ -95,17 +95,6 @@
 </head>
 <body>
     <div class="container">
-        <!-- Small Box for Adding/Search Players -->
-        <div class="box small">
-            <h3>IPL Player Records</h3>
-            <input type="text" id="playerName" placeholder="Enter Player Name">
-            <textarea id="playerData" placeholder="Enter Performance Details"></textarea>
-            <button onclick="addPlayer()">Add Player</button>
-            <input type="text" id="searchPlayer" placeholder="Search Player">
-            <button onclick="searchPlayer()">Search</button>
-        </div>
-
-        <!-- Medium Box for Gopesh and Vivek's records -->
         <div class="box medium">
             <h3>Match Records</h3>
             <table>
@@ -114,6 +103,7 @@
                         <th>Name</th>
                         <th>Team</th>
                         <th>Result</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody id="matchTable"></tbody>
@@ -127,35 +117,10 @@
             </select>
             <button onclick="addMatchEntry()">Add Entry</button>
         </div>
-
-        <!-- Large Box for Displaying Player Records -->
-        <div class="box large">
-            <h3>Player Performance Data</h3>
-            <div id="playerResults"></div>
-        </div>
     </div>
 
     <script>
         let matchRecords = JSON.parse(localStorage.getItem("matchRecords")) || [];
-        let playerRecords = JSON.parse(localStorage.getItem("playerRecords")) || {};
-
-        function addPlayer() {
-            let name = document.getElementById("playerName").value;
-            let details = document.getElementById("playerData").value;
-            if (name && details) {
-                playerRecords[name] = playerRecords[name] || [];
-                playerRecords[name].push(details);
-                localStorage.setItem("playerRecords", JSON.stringify(playerRecords));
-                alert("Player added successfully!");
-            }
-        }
-
-        function searchPlayer() {
-            let name = document.getElementById("searchPlayer").value;
-            let results = playerRecords[name] || [];
-            let output = results.length > 0 ? results.map(r => `<p>${r}</p>`).join('') : "No records found";
-            document.getElementById("playerResults").innerHTML = output;
-        }
 
         function addMatchEntry() {
             let name = document.getElementById("player").value;
@@ -168,12 +133,29 @@
             }
         }
 
+        function editMatchEntry(index) {
+            let record = matchRecords[index];
+            let newTeam = prompt("Enter new team:", record.team);
+            let newResult = prompt("Enter new result (Won/Lost):", record.result);
+            if (newTeam && newResult) {
+                matchRecords[index].team = newTeam;
+                matchRecords[index].result = newResult;
+                localStorage.setItem("matchRecords", JSON.stringify(matchRecords));
+                renderMatchTable();
+            }
+        }
+
         function renderMatchTable() {
             let table = document.getElementById("matchTable");
             table.innerHTML = "";
             let winCounts = { Gopesh: 0, Vivek: 0 };
-            matchRecords.forEach(record => {
-                let row = `<tr><td>${record.name}</td><td>${record.team}</td><td>${record.result}</td></tr>`;
+            matchRecords.forEach((record, index) => {
+                let row = `<tr>
+                            <td>${record.name}</td>
+                            <td>${record.team}</td>
+                            <td>${record.result}</td>
+                            <td><button onclick="editMatchEntry(${index})">Edit</button></td>
+                        </tr>`;
                 table.innerHTML += row;
                 if (record.result === "Won") {
                     winCounts[record.name] = (winCounts[record.name] || 0) + 1;
