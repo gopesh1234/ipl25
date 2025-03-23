@@ -31,6 +31,7 @@
             border-radius: 15px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
             text-align: left;
+            overflow: hidden;
         }
 
         .medium {
@@ -38,23 +39,31 @@
             min-width: 300px;
         }
 
+        .table-container {
+            max-height: 250px; /* Limit height for vertical scroll after 6 rows */
+            overflow-y: auto;
+            overflow-x: auto;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 10px;
             background: rgba(255, 255, 255, 0.1);
             border-radius: 10px;
-            overflow: hidden;
+            white-space: nowrap; /* Prevent line breaks */
+        }
+
+        thead {
+            position: sticky;
+            top: 0;
+            background: rgba(255, 255, 255, 0.2);
         }
 
         th, td {
             padding: 10px;
             border: 1px solid rgba(255, 255, 255, 0.3);
             text-align: center;
-        }
-
-        th {
-            background: rgba(255, 255, 255, 0.2);
+            min-width: 100px; /* Ensure cells stay wide enough */
         }
 
         input, select, button {
@@ -62,7 +71,6 @@
             padding: 8px;
             margin-top: 8px;
             border: none;
-            border-radius: 5px;
             font-size: 12px;
         }
 
@@ -76,8 +84,8 @@
             color: white;
             cursor: pointer;
             transition: 0.3s;
+            margin-right: 5px;
         }
-
         .delete-btn {
             background: red;
         }
@@ -87,17 +95,19 @@
     <div class="container">
         <div class="box medium">
             <h3>Match Records</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Team</th>
-                        <th>Result</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody id="matchTable"></tbody>
-            </table>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Team</th>
+                            <th>Result</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="matchTable"></tbody>
+                </table>
+            </div>
             <p id="totalWins"></p>
             <input type="text" id="player" placeholder="Enter Name (Gopesh/Vivek)">
             <input type="text" id="team" placeholder="Enter Team">
@@ -154,8 +164,8 @@
                                     <td>${record.team}</td>
                                     <td>${record.result}</td>
                                     <td>
-                                        <button onclick="editMatchEntry(${index})">e</button>
-                                        <button class="delete-btn" onclick="deleteMatchEntry(${index})">d</button>
+                                        <button onclick="editMatchEntry(${index})">Edit</button>
+                                        <button class="delete-btn" onclick="deleteMatchEntry(${index})">Delete</button>
                                     </td>
                                 </tr>`;
                 table.innerHTML += row;
