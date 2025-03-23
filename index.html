@@ -112,6 +112,7 @@
             <input type="text" id="player" placeholder="Enter Name (Gopesh/Vivek)">
             <input type="text" id="team" placeholder="Enter Team">
             <select id="result">
+                <option value="NA">NA</option>
                 <option value="Won">Won</option>
                 <option value="Lost">Lost</option>
             </select>
@@ -151,11 +152,11 @@
             let winCounts = { Gopesh: 0, Vivek: 0 };
             matchRecords.forEach((record, index) => {
                 let row = `<tr>
-                            <td>${record.name}</td>
-                            <td>${record.team}</td>
-                            <td>${record.result}</td>
-                            <td><button onclick="editMatchEntry(${index})">Edit</button></td>
-                        </tr>`;
+                                    <td>${record.name}</td>
+                                    <td>${record.team}</td>
+                                    <td>${record.result}</td>
+                                    <td><button onclick="editMatchEntry(${index})">Edit</button></td>
+                                </tr>`;
                 table.innerHTML += row;
                 if (record.result === "Won") {
                     winCounts[record.name] = (winCounts[record.name] || 0) + 1;
