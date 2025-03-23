@@ -33,18 +33,8 @@
             text-align: left;
         }
 
-        .small {
-            width: 25%;
-            min-width: 250px;
-        }
-
         .medium {
             width: 40%;
-            min-width: 300px;
-        }
-
-        .large {
-            width: 30%;
             min-width: 300px;
         }
 
@@ -67,7 +57,7 @@
             background: rgba(255, 255, 255, 0.2);
         }
 
-        input, textarea, select, button {
+        input, select, button {
             width: 90%;
             padding: 8px;
             margin-top: 8px;
@@ -76,21 +66,21 @@
             font-size: 12px;
         }
 
-        input, textarea, select {
+        input, select {
             background: rgba(255, 255, 255, 0.2);
             color: white;
         }
 
         button {
-            background: #ff5722;
+            background: blue;
             color: white;
             cursor: pointer;
             transition: 0.3s;
         }
 
-            button:hover {
-                background: #e64a19;
-            }
+        .delete-btn {
+            background: red;
+        }
     </style>
 </head>
 <body>
@@ -146,6 +136,14 @@
             }
         }
 
+        function deleteMatchEntry(index) {
+            if (confirm("Are you sure you want to delete this entry?")) {
+                matchRecords.splice(index, 1);
+                localStorage.setItem("matchRecords", JSON.stringify(matchRecords));
+                renderMatchTable();
+            }
+        }
+
         function renderMatchTable() {
             let table = document.getElementById("matchTable");
             table.innerHTML = "";
@@ -155,7 +153,10 @@
                                     <td>${record.name}</td>
                                     <td>${record.team}</td>
                                     <td>${record.result}</td>
-                                    <td><button onclick="editMatchEntry(${index})">Edit</button></td>
+                                    <td>
+                                        <button onclick="editMatchEntry(${index})">e</button>
+                                        <button class="delete-btn" onclick="deleteMatchEntry(${index})">d</button>
+                                    </td>
                                 </tr>`;
                 table.innerHTML += row;
                 if (record.result === "Won") {
